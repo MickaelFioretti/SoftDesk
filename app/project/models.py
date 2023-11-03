@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 
 class Project(models.Model):
@@ -13,11 +13,13 @@ class Project(models.Model):
     ]
     project_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="owned_projects"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="owned_projects",
     )
 
 
 # Modèle pour les contributeurs
 class Contributor(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     projects = models.ManyToManyField(Project, related_name="contributors")
