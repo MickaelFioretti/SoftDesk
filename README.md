@@ -108,3 +108,10 @@ python manage.py runserver
 username: admin
 password: inforoot
 '''
+
+## User
+
+'''text
+username: Mickael
+password: &aLEa$L3meQ675Do
+'''
