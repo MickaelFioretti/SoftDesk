@@ -60,7 +60,7 @@ class ProjectAddContributorView(generics.CreateAPIView):
             contributor = serializer.save()
             response_data["response"] = "Successfully created a new contributor."
             response_data["user"] = contributor.user.username
-            response_data["project"] = contributor.project.id
+            response_data["project"] = contributor.project.name
         else:
             response_data = serializer.errors
         return Response(response_data, status=status.HTTP_201_CREATED)
