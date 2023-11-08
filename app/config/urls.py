@@ -18,7 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from authentication.views import RegisterView, UserListView, UserDetailView
-from project.views import ProjectListView, ProjectCreateView
+from project.views import (
+    ProjectListView,
+    ProjectCreateView,
+    ProjectAddContributorView,
+    ContributorListView,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,4 +34,10 @@ urlpatterns = [
     path("api/user/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
     path("api/projects/", ProjectListView.as_view(), name="project-list"),
     path("api/project/create/", ProjectCreateView.as_view(), name="project-create"),
+    path(
+        "api/project/add_contributor/",
+        ProjectAddContributorView.as_view(),
+        name="project-add-contributor",
+    ),
+    path("api/contributors/", ContributorListView.as_view(), name="contributor-list"),
 ]

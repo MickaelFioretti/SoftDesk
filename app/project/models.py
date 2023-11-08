@@ -18,8 +18,13 @@ class Project(models.Model):
         related_name="owned_projects",
     )
 
+    def __str__(self):
+        return self.name
+
 
 # Modèle pour les contributeurs
 class Contributor(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    projects = models.ManyToManyField(Project, related_name="contributors")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="contributors", null=True
+    )
