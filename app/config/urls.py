@@ -21,9 +21,11 @@ from authentication.views import RegisterView, UserListView, UserDetailView
 from project.views import (
     ProjectListView,
     ProjectCreateView,
-    ProjectAddContributorView,
+    ContributorCreateView,
     ContributorListView,
 )
+from issues.views import IssueListView, IssueCreateView
+from comments.views import CommentListView, CommentCreateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -36,8 +38,12 @@ urlpatterns = [
     path("api/project/create/", ProjectCreateView.as_view(), name="project-create"),
     path(
         "api/project/add_contributor/",
-        ProjectAddContributorView.as_view(),
+        ContributorCreateView.as_view(),
         name="project-add-contributor",
     ),
     path("api/contributors/", ContributorListView.as_view(), name="contributor-list"),
+    path("api/issues/", IssueListView.as_view(), name="issue-list"),
+    path("api/issue/create/", IssueCreateView.as_view(), name="issue-create"),
+    path("api/comments/", CommentListView.as_view(), name="comment-list"),
+    path("api/comment/create/", CommentCreateView.as_view(), name="comment-create"),
 ]

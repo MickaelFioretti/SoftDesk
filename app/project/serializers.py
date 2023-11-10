@@ -2,9 +2,10 @@ from rest_framework import serializers
 from .models import Project, Contributor
 
 
-class ContributorSerializer(serializers.ModelSerializer):
-    # user = serializers.StringRelatedField()
-    # project = serializers.StringRelatedField()
+# ---- Contributors ----
+class ContributorGetSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    project = serializers.StringRelatedField()
 
     class Meta:
         model = Contributor
@@ -15,9 +16,21 @@ class ContributorSerializer(serializers.ModelSerializer):
         ]
 
 
+class ContributorPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contributor
+        fields = [
+            "id",
+            "user",
+            "project",
+        ]
+
+
+# ---- Projects ----
+
+
 class ProjectSerializer(serializers.ModelSerializer):
-    # owner = serializers.StringRelatedField()
-    contributors = ContributorSerializer(many=True, read_only=True)
+    contributors = ContributorGetSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
@@ -29,6 +42,3 @@ class ProjectSerializer(serializers.ModelSerializer):
             "owner",
             "contributors",
         ]
-
-
-# TODO: Add serializer for post and get requests

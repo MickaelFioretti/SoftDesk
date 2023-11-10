@@ -2,14 +2,14 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Project, Contributor
-from .serializers import ProjectSerializer, ContributorSerializer
+from .serializers import (
+    ProjectSerializer,
+    ContributorGetSerializer,
+)
 
 
 # ---- Project views ----
 class ProjectListView(generics.ListAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
     def get(self, request):
         response_data = {}
         project = Project.objects.all()
@@ -20,9 +20,6 @@ class ProjectListView(generics.ListAPIView):
 
 
 class ProjectCreateView(generics.CreateAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
     def create(self, request):
         response_data = {}
         serializer = self.get_serializer(data=request.data)
@@ -37,22 +34,16 @@ class ProjectCreateView(generics.CreateAPIView):
 
 # ---- Contributor views ----
 class ContributorListView(generics.ListAPIView):
-    queryset = Contributor.objects.all()
-    serializer_class = ContributorSerializer
-
     def get(self, request):
         response_data = {}
         contributor = Contributor.objects.all()
-        serializer = ContributorSerializer(contributor, many=True)
+        serializer = ContributorGetSerializer(contributor, many=True)
         response_data["response"] = "Successfully retrieved all contributors."
         response_data["data"] = serializer.data
         return Response(response_data, status=status.HTTP_200_OK)
 
 
-class ProjectAddContributorView(generics.CreateAPIView):
-    queryset = Contributor.objects.all()
-    serializer_class = ContributorSerializer
-
+class ContributorCreateView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         response_data = {}
         serializer = self.get_serializer(data=request.data)
