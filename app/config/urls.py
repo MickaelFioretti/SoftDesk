@@ -17,7 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from authentication.views import RegisterView, UserListView, UserDetailView
+from authentication.views import (
+    RegisterView,
+    UserListView,
+    UserDetailView,
+    UserDetailAPIView,
+)
 from project.views import (
     ProjectListView,
     ProjectCreateView,
@@ -46,4 +51,5 @@ urlpatterns = [
     path("api/issue/create/", IssueCreateView.as_view(), name="issue-create"),
     path("api/comments/", CommentListView.as_view(), name="comment-list"),
     path("api/comment/create/", CommentCreateView.as_view(), name="comment-create"),
+    path("api/user/me/", UserDetailAPIView.as_view(), name="current-user"),
 ]
