@@ -15,41 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from authentication.views import (
-    RegisterView,
-    UserListView,
-    UserDetailView,
-    UserDetailAPIView,
-)
-from project.views import (
-    ProjectListView,
-    ProjectCreateView,
-    ContributorCreateView,
-    ContributorListView,
-)
-from issues.views import IssueListView, IssueCreateView
-from comments.views import CommentListView, CommentCreateView
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/connection/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api/register/", RegisterView.as_view(), name="register"),
-    path("api/users/", UserListView.as_view(), name="user-list"),
-    path("api/user/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
-    path("api/projects/", ProjectListView.as_view(), name="project-list"),
-    path("api/project/create/", ProjectCreateView.as_view(), name="project-create"),
-    path(
-        "api/project/add_contributor/",
-        ContributorCreateView.as_view(),
-        name="project-add-contributor",
-    ),
-    path("api/contributors/", ContributorListView.as_view(), name="contributor-list"),
-    path("api/issues/", IssueListView.as_view(), name="issue-list"),
-    path("api/issue/create/", IssueCreateView.as_view(), name="issue-create"),
-    path("api/comments/", CommentListView.as_view(), name="comment-list"),
-    path("api/comment/create/", CommentCreateView.as_view(), name="comment-create"),
-    path("api/user/me/", UserDetailAPIView.as_view(), name="current-user"),
+    path("api/", include("authentication.urls")),
+    path("api/", include("issues.urls")),
+    path("api/", include("comments.urls")),
+    path("api/", include("project.urls")),
 ]
