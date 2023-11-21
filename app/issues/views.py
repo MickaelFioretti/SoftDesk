@@ -2,6 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Issue
 from .serializers import IssueSerializer
+from rest_framework.views import APIView
 
 
 # ---- Issue views ----
@@ -32,3 +33,10 @@ class IssueCreateView(generics.CreateAPIView):
         else:
             response_data = serializer.errors
         return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+class ProjectIssueListView(APIView):
+    def get(self, request, project_id):
+        issues = Issue.objects.filter(project_id=project_id)
+        serializer = IssueSerializer(issues, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
