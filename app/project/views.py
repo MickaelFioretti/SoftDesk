@@ -6,20 +6,26 @@ from .serializers import (
     ProjectSerializer,
     ContributorGetSerializer,
 )
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
 
 
 # ---- Project views ----
-class ProjectListView(generics.ListAPIView):
+class ProjectListView(APIView):
     def get(self, request):
         response_data = {}
-        project = Project.objects.all()
-        serializer = ProjectSerializer(project, many=True)
+        project = Project.objects.all().order_by("id")
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(project, request)
+        serializer = ProjectSerializer(result_page, many=True)
         response_data["response"] = "Successfully retrieved all projects."
         response_data["data"] = serializer.data
-        return Response(response_data, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response(response_data)
 
 
 class ProjectCreateView(generics.CreateAPIView):
+    serializer_class = ProjectSerializer
+
     def create(self, request):
         response_data = {}
         serializer = self.get_serializer(data=request.data)

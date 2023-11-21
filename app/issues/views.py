@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import Issue
 from .serializers import IssueSerializer
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 
 
 # ---- Issue views ----
@@ -37,6 +38,8 @@ class IssueCreateView(generics.CreateAPIView):
 
 class ProjectIssueListView(APIView):
     def get(self, request, project_id):
-        issues = Issue.objects.filter(project_id=project_id)
-        serializer = IssueSerializer(issues, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        issues = Issue.objects.filter(project_id=project_id).order_by("id")
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(issues, request)
+        serializer = IssueSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)

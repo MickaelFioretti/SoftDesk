@@ -5,7 +5,7 @@ urlpatterns = [
     path("issues/", IssueListView.as_view(), name="Get all issues"),
     path("issue/create/", IssueCreateView.as_view(), name="Create an issue"),
     path(
-        "project/<int:project_id>/issues/",
+        "project_issues/<int:project_id>",
         ProjectIssueListView.as_view(),
         name="Get all issues for a project",
     ),
