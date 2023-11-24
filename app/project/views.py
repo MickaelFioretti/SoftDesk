@@ -38,6 +38,42 @@ class ProjectCreateView(generics.CreateAPIView):
         return Response(response_data, status=status.HTTP_201_CREATED)
 
 
+class ProjectUpdateView(generics.UpdateAPIView):
+    serializer_class = ProjectSerializer
+
+    # only owner can update project
+    def update(self, request, *args, **kwargs):
+        response_data = {}
+        project = Project.objects.get(id=kwargs["pk"])
+        if project.owner == request.user:
+            serializer = self.get_serializer(project, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                response_data["response"] = "Successfully updated project."
+                response_data["name"] = project.name
+            else:
+                response_data = serializer.errors
+        else:
+            response_data["response"] = "You are not the owner of this project."
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
+class ProjectDeleteView(generics.DestroyAPIView):
+    serializer_class = ProjectSerializer
+
+    # only owner can delete project
+    def delete(self, request, *args, **kwargs):
+        response_data = {}
+        project = Project.objects.get(id=kwargs["pk"])
+        if project.owner == request.user:
+            project.delete()
+            response_data["response"] = "Successfully deleted project."
+            response_data["name"] = project.name
+        else:
+            response_data["response"] = "You are not the owner of this project."
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
 # ---- Contributor views ----
 class ContributorListView(generics.ListAPIView):
     def get(self, request):
