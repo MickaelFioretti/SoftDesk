@@ -13,6 +13,7 @@ class ContributorGetSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "project",
+            "created_time",
         ]
 
 
@@ -23,6 +24,7 @@ class ContributorPostSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "project",
+            "created_time",
         ]
 
 
@@ -41,4 +43,5 @@ class ProjectSerializer(serializers.ModelSerializer):
             "project_type",
             "owner",
             "contributors",
+            "created_time",
         ]

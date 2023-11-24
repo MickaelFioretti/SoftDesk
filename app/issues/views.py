@@ -24,15 +24,28 @@ class IssueCreateView(generics.CreateAPIView):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
 
+    # only contributor of the project can create issue
     def create(self, request):
         response_data = {}
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            issue = serializer.save()
-            response_data["response"] = "Successfully created a new issue."
-            response_data["name"] = issue.name
+        if request.user in request.data["project"].contributors.all():
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                # Assignable issues only for contributors of the project
+                if (
+                    serializer.validated_data["assigned_to"]
+                    in serializer.validated_data["project"].contributors.all()
+                ):
+                    issue = serializer.save()
+                    response_data["response"] = "Successfully created a new issue."
+                    response_data["name"] = issue.name
+                else:
+                    response_data[
+                        "response"
+                    ] = "You want to assign this issue to a user who is not a contributor of this project."
+            else:
+                response_data = serializer.errors
         else:
-            response_data = serializer.errors
+            response_data["response"] = "You are not a contributor of this project."
         return Response(response_data, status=status.HTTP_201_CREATED)
 
 

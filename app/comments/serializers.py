@@ -10,4 +10,5 @@ class CommentSerializer(serializers.ModelSerializer):
             "text",
             "issue",
             "author",
+            "created_time",
         ]

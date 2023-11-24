@@ -14,4 +14,5 @@ class IssueSerializer(serializers.ModelSerializer):
             "tag",
             "project",
             "assigned_to",
+            "created_time",
         ]
