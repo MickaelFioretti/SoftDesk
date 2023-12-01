@@ -28,6 +28,7 @@ class CommentCreateView(generics.CreateAPIView):
         response_data = {}
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
+            serializer.owner = request.user
             comment = serializer.save()
             response_data["response"] = "Successfully created a new comment."
             response_data["text"] = comment.text

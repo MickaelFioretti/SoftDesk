@@ -35,6 +35,7 @@ class IssueCreateView(generics.CreateAPIView):
                     serializer.validated_data["assigned_to"]
                     in serializer.validated_data["project"].contributors.all()
                 ):
+                    serializer.owner = request.user
                     issue = serializer.save()
                     response_data["response"] = "Successfully created a new issue."
                     response_data["name"] = issue.name

@@ -10,3 +10,6 @@ class Comment(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments"
     )
     created_time = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments"
+    )

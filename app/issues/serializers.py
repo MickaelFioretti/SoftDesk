@@ -15,4 +15,5 @@ class IssueSerializer(serializers.ModelSerializer):
             "project",
             "assigned_to",
             "created_time",
+            "owner",
         ]
