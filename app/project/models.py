@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class Project(models.Model):
@@ -17,7 +18,7 @@ class Project(models.Model):
         on_delete=models.CASCADE,
         related_name="owned_projects",
     )
-    created_time = models.DateTimeField(auto_now_add=True)
+    created_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
@@ -29,4 +30,4 @@ class Contributor(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, related_name="contributors", null=True
     )
-    created_time = models.DateTimeField(auto_now_add=True)
+    created_time = models.DateTimeField(default=timezone.now)

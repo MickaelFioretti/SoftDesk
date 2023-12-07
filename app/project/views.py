@@ -29,6 +29,7 @@ class ProjectCreateView(generics.CreateAPIView):
     def create(self, request):
         response_data = {}
         serializer = self.get_serializer(data=request.data)
+
         if serializer.is_valid():
             project = serializer.save()
             response_data["response"] = "Successfully created a new project."

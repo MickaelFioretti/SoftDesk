@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from project.models import Project
+from django.utils import timezone
+
 
 STATUS_CHOICES = [
     ("TODO", "To Do"),
@@ -29,7 +31,7 @@ class Issue(models.Model):
         on_delete=models.CASCADE,
         related_name="assigned_issues",
     )
-    created_time = models.DateTimeField(auto_now_add=True)
+    created_time = models.DateTimeField(default=timezone.now)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="issues"
     )
