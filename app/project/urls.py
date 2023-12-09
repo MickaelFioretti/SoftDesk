@@ -9,7 +9,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("projects/", ProjectListView.as_view(), name="Get all projec"),
+    path("project/", ProjectListView.as_view(), name="Get all projec"),
     path("project/create/", ProjectCreateView.as_view(), name="Create a project"),
     path(
         "project/update/<int:pk>/", ProjectUpdateView.as_view(), name="Update a project"
@@ -22,5 +22,5 @@ urlpatterns = [
         ContributorCreateView.as_view(),
         name="Add contributor to a project",
     ),
-    path("contributors/", ContributorListView.as_view(), name="Get all contributors"),
+    path("contributor/", ContributorListView.as_view(), name="Get all contributors"),
 ]
