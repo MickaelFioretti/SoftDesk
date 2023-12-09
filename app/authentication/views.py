@@ -24,11 +24,15 @@ class RegisterView(generics.CreateAPIView):
 
 
 class UserListView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -42,7 +46,7 @@ class UserDetailAPIView(APIView):
         return Response(serializer.data)
 
     def put(self, request):
-        serializer = UserSerializer(request.user, data=request.data)
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -51,4 +55,5 @@ class UserDetailAPIView(APIView):
     def delete(self, request):
         user = request.user
         user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        response_data = {"response": "Successfully deleted user."}
+        return Response(response_data, status=status.HTTP_204_NO_CONTENT)

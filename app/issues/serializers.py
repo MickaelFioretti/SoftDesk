@@ -3,6 +3,8 @@ from .models import Issue
 
 
 class IssueSerializer(serializers.ModelSerializer):
+    project = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Issue
         fields = [

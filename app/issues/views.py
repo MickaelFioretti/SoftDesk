@@ -4,12 +4,15 @@ from .models import Issue
 from .serializers import IssueSerializer
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
+from config.permissions import IsOwner
 
 
 # ---- Issue views ----
 class IssueListView(generics.ListAPIView):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         response_data = {}
@@ -23,6 +26,7 @@ class IssueListView(generics.ListAPIView):
 class IssueCreateView(generics.CreateAPIView):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
+    permission_classes = [IsAuthenticated]
 
     # only contributor of the project can create issue
     def create(self, request):
@@ -50,7 +54,40 @@ class IssueCreateView(generics.CreateAPIView):
         return Response(response_data, status=status.HTTP_201_CREATED)
 
 
+class IssueUpdateView(generics.UpdateAPIView):
+    queryset = Issue.objects.all()
+    serializer_class = IssueSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def update(self, request, *args, **kwargs):
+        issue = self.get_object()
+        serializer = IssueSerializer(issue, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"response": "Successfully updated issue.", "issue": serializer.data},
+                status=status.HTTP_200_OK,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class IssueDeleteView(generics.DestroyAPIView):
+    queryset = Issue.objects.all()
+    serializer_class = IssueSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def delete(self, request, *args, **kwargs):
+        issue = self.get_object()
+        issue.delete()
+        return Response(
+            {"response": "Successfully deleted issue."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
+
+
 class ProjectIssueListView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, project_id):
         issues = Issue.objects.filter(project_id=project_id).order_by("id")
         paginator = PageNumberPagination()

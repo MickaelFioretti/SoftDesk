@@ -8,10 +8,14 @@ from .serializers import (
 )
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from config.permissions import IsOwner
 
 
 # ---- Project views ----
 class ProjectListView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         response_data = {}
         project = Project.objects.all().order_by("id")
@@ -25,6 +29,7 @@ class ProjectListView(APIView):
 
 class ProjectCreateView(generics.CreateAPIView):
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request):
         response_data = {}
@@ -41,6 +46,7 @@ class ProjectCreateView(generics.CreateAPIView):
 
 class ProjectUpdateView(generics.UpdateAPIView):
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
 
     # only owner can update project
     def update(self, request, *args, **kwargs):
@@ -61,6 +67,7 @@ class ProjectUpdateView(generics.UpdateAPIView):
 
 class ProjectDeleteView(generics.DestroyAPIView):
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
 
     # only owner can delete project
     def delete(self, request, *args, **kwargs):
@@ -77,6 +84,8 @@ class ProjectDeleteView(generics.DestroyAPIView):
 
 # ---- Contributor views ----
 class ContributorListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         response_data = {}
         contributor = Contributor.objects.all()
@@ -87,6 +96,8 @@ class ContributorListView(generics.ListAPIView):
 
 
 class ContributorCreateView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         response_data = {}
         serializer = self.get_serializer(data=request.data)
