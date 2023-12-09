@@ -5,14 +5,14 @@ from .serializers import CommentSerializer
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from config.permissions import IsOwner
+from config.permissions import IsOwner, IsProjectContributor
 
 
 # ---- Comment views ----
 class CommentListView(generics.ListAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProjectContributor]
 
     def get(self, request):
         response_data = {}
@@ -26,7 +26,7 @@ class CommentListView(generics.ListAPIView):
 class CommentCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProjectContributor]
 
     def create(self, request):
         response_data = {}
@@ -72,7 +72,7 @@ class CommentDeleteView(generics.DestroyAPIView):
 
 
 class IssueCommentListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProjectContributor]
 
     def get(self, request, issue_id):
         comments = Comment.objects.filter(issue_id=issue_id).order_by("id")

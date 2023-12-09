@@ -5,14 +5,14 @@ from .serializers import IssueSerializer
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from config.permissions import IsOwner
+from config.permissions import IsOwner, IsProjectContributor
 
 
 # ---- Issue views ----
 class IssueListView(generics.ListAPIView):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProjectContributor]
 
     def get(self, request):
         response_data = {}
@@ -26,7 +26,7 @@ class IssueListView(generics.ListAPIView):
 class IssueCreateView(generics.CreateAPIView):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProjectContributor]
 
     # only contributor of the project can create issue
     def create(self, request):
@@ -86,7 +86,7 @@ class IssueDeleteView(generics.DestroyAPIView):
 
 
 class ProjectIssueListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProjectContributor]
 
     def get(self, request, project_id):
         issues = Issue.objects.filter(project_id=project_id).order_by("id")

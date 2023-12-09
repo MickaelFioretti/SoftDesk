@@ -9,7 +9,7 @@ from .serializers import (
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from config.permissions import IsOwner
+from config.permissions import IsOwner, IsProjectContributor
 
 
 # ---- Project views ----
@@ -39,6 +39,9 @@ class ProjectCreateView(generics.CreateAPIView):
             project = serializer.save()
             response_data["response"] = "Successfully created a new project."
             response_data["name"] = project.name
+            # add owner as contributor
+            contributor = Contributor.objects.create(user=request.user, project=project)
+            contributor.save()
         else:
             response_data = serializer.errors
         return Response(response_data, status=status.HTTP_201_CREATED)
@@ -96,7 +99,7 @@ class ContributorListView(generics.ListAPIView):
 
 
 class ContributorCreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProjectContributor]
 
     def post(self, request, *args, **kwargs):
         response_data = {}
